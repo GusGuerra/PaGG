@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaGG.Core.Utilities;
+using System;
 
 namespace PaGG.Core.Models
 {
@@ -9,7 +10,7 @@ namespace PaGG.Core.Models
             CreatedAt = DateTime.UtcNow;
             SetStatusWithTimestamp(TransactionStatus.Processing);
             SenderId = senderId; ReceiverId = receiverId; Amount = amount;
-            Id = new Guid(new byte[16]).ToString();
+            Id = RandomUtils.CreateNewTransactionId();
         }
 
         public string Id { get; set; }

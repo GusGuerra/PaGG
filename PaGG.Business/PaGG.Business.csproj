@@ -13,4 +13,9 @@
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\PaGG.Backstage\PaGG.Backstage.csproj" />
+    <ProjectReference Include="..\PaGG.Core\PaGG.Core.csproj" />
+  </ItemGroup>
+
 </Project>

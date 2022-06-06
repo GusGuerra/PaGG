@@ -1,14 +1,13 @@
-﻿using PaGG.Core;
-using PaGG.Core.Models;
+﻿using PaGG.Core.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace PaGG.Backstage
 {
     public class DatabaseOperations : IDatabaseOperations
     {
+        // Temporary "mock" databases
         private readonly List<Transaction> TransactionDatabase;
         private readonly List<Account> AccountDatabase;
 
@@ -20,44 +19,22 @@ namespace PaGG.Backstage
 
         public Transaction GetTransaction(string transactionId)
         {
-            var tx = TransactionDatabase.FirstOrDefault(t => t.Id == transactionId);
-            if (tx == null)
-                throw new PaGGCustomException(HttpStatusCode.NotFound, ExceptionMessages.TransactionNotFound);
-            return tx;
+            return TransactionDatabase.FirstOrDefault(t => t.Id == transactionId);
         }
 
         public Account GetAccount(string accountId)
         {
-            var acc = AccountDatabase.FirstOrDefault(a => a.Id == accountId);
-            if (acc == null)
-                throw new PaGGCustomException(HttpStatusCode.NotFound, ExceptionMessages.AccountNotFound);
-            return acc;
+            return AccountDatabase.FirstOrDefault(a => a.Id == accountId);
         }
 
-        // TODO: move this to TransactionOperations
-        public async Task<Transaction> CreateTransactionAsync(string receiverId, string senderId, decimal amount)
-        {
-            var transaction = new Transaction(receiverId, senderId, amount);
-            // lock senderId
-            // lock receiverId
-            // lock transaction.Id
-            await SaveTransactionAsync(transaction);
-            _ = PerformTransactionAsync(transaction);
-            return transaction;
-        }
-
-        // TODO: move this to TransactionOperations
-        private async Task SaveTransactionAsync(Transaction transaction)
+        public async Task SaveTransactionAsync(Transaction transaction)
         {
             TransactionDatabase.Add(transaction);
         }
 
-        // TODO: move this to TransactionOperations
-        private async Task PerformTransactionAsync(Transaction transaction)
+        public async Task SaveAccountAsync(Account account)
         {
-            // decide between internal or external operation
-            // perform operation
-            // modify balances
+            AccountDatabase.Add(account);
         }
     }
 }

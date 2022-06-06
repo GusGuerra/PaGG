@@ -5,9 +5,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ExceptionHandlerMiddleware.cs" />
+    <Compile Remove="ExceptionMessages.cs" />
+    <Compile Remove="PaGGCustomException.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
   </ItemGroup>
 
 </Project>

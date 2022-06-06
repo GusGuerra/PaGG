@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using PaGG.Backstage;
+using PaGG.Business;
 using PaGG.Core.Request;
 using PaGG.Core.Response;
 using System.Threading.Tasks;
@@ -10,11 +10,11 @@ namespace PaGG.Controllers
     [Route("api/transaction")]
     public class TransactionsController : ControllerBase
     {
-        private readonly IDatabaseOperations _databaseOperations;
+        private readonly ITransactionOperations _transactionOperations;
 
-        public TransactionsController(IDatabaseOperations databaseOperations)
+        public TransactionsController(ITransactionOperations transactionOperations)
         {
-            _databaseOperations = databaseOperations;
+            _transactionOperations = transactionOperations;
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace PaGG.Controllers
         public TransactionResponse GetTransactionById(string id)
         {
             // Business Layer -> Service Layer -> Fetch database
-            var transaction = _databaseOperations.GetTransaction(id);
+            var transaction = _transactionOperations.GetTransaction(id);
 
             // move this to a converter class
             return new TransactionResponse()
@@ -44,7 +44,7 @@ namespace PaGG.Controllers
 
             // call business layer to validate sender and receiver
             
-            var transaction = await _databaseOperations.CreateTransactionAsync(request.ReceiverId, request.SenderId, request.Amount);
+            var transaction = await _transactionOperations.CreateTransactionAsync(request.ReceiverId, request.SenderId, request.Amount);
 
             // move this to a converter class
             return new TransactionResponse() { Status = transaction.Status, TransactionId = transaction.Id };

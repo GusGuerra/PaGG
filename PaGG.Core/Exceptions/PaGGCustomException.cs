@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net;
 
-namespace PaGG.Core
+namespace PaGG.Core.Exceptions
 {
     public class PaGGCustomException : Exception
     {

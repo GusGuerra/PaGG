@@ -6,7 +6,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace PaGG.Core
+namespace PaGG.Core.Exceptions
 {
     public class ExceptionHandlerMiddleware
     {
