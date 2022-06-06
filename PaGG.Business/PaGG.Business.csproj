@@ -5,11 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
+    <Compile Remove="DatabaseOperations.cs" />
+    <Compile Remove="IDatabaseOperations.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PaGG.Core\PaGG.Core.csproj" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Core" Version="5.2.9" />
   </ItemGroup>
 
 </Project>

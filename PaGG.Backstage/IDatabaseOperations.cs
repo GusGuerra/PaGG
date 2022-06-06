@@ -1,7 +1,7 @@
 ﻿using PaGG.Core.Models;
 using System.Threading.Tasks;
 
-namespace PaGG.Business
+namespace PaGG.Backstage
 {
     public interface IDatabaseOperations
     {

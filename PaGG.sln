@@ -5,9 +5,11 @@ VisualStudioVersion = 16.0.32428.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG", "PaGG\PaGG.csproj", "{7507D306-0D94-4780-8B50-D687F3531DA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaGG.Business", "PaGG.Business\PaGG.Business.csproj", "{54DC80E6-6949-4C15-B207-140D1702316C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG.Business", "PaGG.Business\PaGG.Business.csproj", "{54DC80E6-6949-4C15-B207-140D1702316C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaGG.Core", "PaGG.Core\PaGG.Core.csproj", "{3A66A605-5914-4C78-A6A4-131869BC94BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG.Core", "PaGG.Core\PaGG.Core.csproj", "{3A66A605-5914-4C78-A6A4-131869BC94BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaGG.Backstage", "PaGG.Backstage\PaGG.Backstage.csproj", "{A4BDFF49-9617-4388-B8A5-7F2117A2829D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{3A66A605-5914-4C78-A6A4-131869BC94BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A66A605-5914-4C78-A6A4-131869BC94BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A66A605-5914-4C78-A6A4-131869BC94BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\PaGG.Backstage\PaGG.Backstage.csproj" />
     <ProjectReference Include="..\PaGG.Business\PaGG.Business.csproj" />
     <ProjectReference Include="..\PaGG.Core\PaGG.Core.csproj" />
   </ItemGroup>

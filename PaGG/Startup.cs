@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using PaGG.Backstage;
 using PaGG.Business;
 using PaGG.Core;
 
@@ -22,6 +23,7 @@ namespace PaGG
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<IDatabaseOperations, DatabaseOperations>();
+            services.AddSingleton<ITransactionOperations, TransactionOperations>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
