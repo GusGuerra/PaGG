@@ -9,9 +9,13 @@ namespace PaGG.Business
     public class TransactionOperations : ITransactionOperations
     {
         private readonly IDatabaseOperations _databaseOperations;
-        public TransactionOperations(IDatabaseOperations databaseOperations)
+        private readonly ILockOperations _lockOperations;
+
+        public TransactionOperations(IDatabaseOperations databaseOperations,
+            ILockOperations lockOperations)
         {
             _databaseOperations = databaseOperations;
+            _lockOperations = lockOperations;
         }
 
         public Transaction GetTransaction(string transactionId)
@@ -31,11 +35,15 @@ namespace PaGG.Business
         {
             // check if both accounts are valid
             var transaction = new Transaction(receiverId, senderId, amount);
-            // lock senderId
-            // lock receiverId
-            // lock transaction.Id
+
+            await Task.WhenAll(
+                _lockOperations.PerformAccountLock(senderId),
+                _lockOperations.PerformAccountLock(receiverId),
+                _lockOperations.PerformTransactionLock(transaction.Id));
+
             await _databaseOperations.SaveTransactionAsync(transaction);
             _ = PerformTransactionAsync(transaction);
+
             return transaction;
         }
 
