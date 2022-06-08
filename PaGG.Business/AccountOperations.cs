@@ -2,6 +2,7 @@
 using PaGG.Core.Exceptions;
 using PaGG.Core.Models;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace PaGG.Business
 {
@@ -24,6 +25,11 @@ namespace PaGG.Business
                 throw new PaGGCustomException(HttpStatusCode.NotFound, ExceptionMessages.AccountNotFound);
             
             return acc;
+        }
+
+        public async Task<Account> CreateAccountAsync()
+        {
+            return new Account();
         }
     }
 }
