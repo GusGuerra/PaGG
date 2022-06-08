@@ -24,7 +24,6 @@ namespace PaGG.Controllers
         [HttpGet("{id}")]
         public TransactionResponse GetTransactionById(string id)
         {
-            // Business Layer -> Service Layer -> Fetch database
             var transaction = _transactionOperations.GetTransaction(id);
 
             // move this to a converter class

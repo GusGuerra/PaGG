@@ -1,4 +1,5 @@
-﻿using PaGG.Core.Utilities;
+﻿using PaGG.Core.Exceptions;
+using PaGG.Core.Utilities;
 using StackExchange.Redis;
 using System;
 using System.Threading.Tasks;
@@ -8,11 +9,21 @@ namespace PaGG.Backstage
     public class LockOperations : ILockOperations
     {
         private readonly ConnectionMultiplexer connection;
-        private readonly string endpoint = "http://localhost:6379";
+
+        private readonly int NumberOfRetries = 2;
+        private readonly int RetryModulo = 5;
+        private readonly double RetryDelayFactor = 0.1;
+        private readonly string endpoint = "localhost";
 
         public LockOperations()
         {
-            ConfigurationOptions config = new() { EndPoints = { endpoint } };
+            ConfigurationOptions config = new()
+            {
+                EndPoints = { endpoint }, 
+                AbortOnConnectFail = false,
+                KeepAlive = 10,
+                Proxy = Proxy.Twemproxy
+            };
 
             connection = ConnectionMultiplexer.Connect(config);
         }
@@ -35,11 +46,23 @@ namespace PaGG.Backstage
 
             string storedLockId = await TryLock(key, lockId);
 
-            do // TODO: Retry with delay
+            int retries = NumberOfRetries;
+            double factor = RetryDelayFactor;
+
+            do
             {
+                retries -= 1;
+
                 if (storedLockId == lockId)
                     return lockId;
-            } while (true);
+
+                int delay = LockUtils.GetRetryDelay(factor);
+                await Task.Delay(delay);
+                factor = LockUtils.UpdateRetryFactor(retries, factor, RetryModulo);
+
+            } while (retries >= 0);
+
+            throw new PaGGCustomException(ExceptionMessages.ObjectLocked);
         }
 
         public async Task ReleaseAccountLock(string key, string lockId)
