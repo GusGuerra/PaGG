@@ -10,7 +10,7 @@ namespace PaGG.Core.Models
             CreatedAt = DateTime.UtcNow;
             SetStatusWithTimestamp(TransactionStatus.Processing);
             SenderId = senderId; ReceiverId = receiverId; Amount = amount;
-            Id = RandomUtils.CreateNewTransactionId();
+            Id = RandomUtils.CreateNewUniqueId();
         }
 
         public string Id { get; set; }

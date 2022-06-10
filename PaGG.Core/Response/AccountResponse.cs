@@ -10,11 +10,14 @@ namespace PaGG.Core.Response
     {
         public AccountResponse(Account source)
         {
+            Id = source.Id;
             Balance = source.Balance;
             AccountOwner = source.AccountOwner;
             Wallet = new List<BillingOptionResponse>(source.Wallet.Select(x => new BillingOptionResponse(x)));
         }
 
+        [DataMember]
+        public string Id { get; set; }
         [DataMember]
         public long Balance { get; set; }
         [DataMember]

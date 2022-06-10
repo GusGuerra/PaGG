@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using PaGG.Core.Utilities;
+using System.Collections.Generic;
 
 namespace PaGG.Core.Models
 {
@@ -6,6 +7,7 @@ namespace PaGG.Core.Models
     {
         public Account()
         {
+            Id = RandomUtils.CreateNewUniqueId();
             Balance = 0;
         }
 

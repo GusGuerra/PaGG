@@ -12,7 +12,7 @@ namespace PaGG.Core.Utilities
             _random = RandomNumberGenerator.Create();
         }
 
-        public static string CreateNewTransactionId()
+        public static string CreateNewUniqueId()
         {
             byte[] randomBytes = new byte[16];
             _random.GetBytes(randomBytes);
