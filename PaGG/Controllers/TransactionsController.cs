@@ -11,9 +11,12 @@ namespace PaGG.Controllers
     public class TransactionsController : ControllerBase
     {
         private readonly ITransactionOperations _transactionOperations;
+        private readonly IAccountOperations _accountOperations;
 
-        public TransactionsController(ITransactionOperations transactionOperations)
+        public TransactionsController(ITransactionOperations transactionOperations,
+            IAccountOperations accountOperations)
         {
+            _accountOperations = accountOperations;
             _transactionOperations = transactionOperations;
         }
 

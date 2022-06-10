@@ -20,6 +20,6 @@ namespace PaGG.Core.Response
         [DataMember]
         public string AccountOwner { get; set; }
         [DataMember]
-        public List<BillingOptionResponse> Wallet;
+        public List<BillingOptionResponse> Wallet { get; set; }
     }
 }

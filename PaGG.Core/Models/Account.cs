@@ -12,7 +12,7 @@ namespace PaGG.Core.Models
         public string Id { get; set; }
         public long Balance { get; set; }
         public string AccountOwner { get; set; }
-        public List<BillingOption> Wallet;
+        public List<BillingOption> Wallet { get; set; }
         public AccountType Type => Wallet.Count != 0
             ? AccountType.External
             : AccountType.Internal;

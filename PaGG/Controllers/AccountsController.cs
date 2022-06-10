@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PaGG.Business;
+using PaGG.Core.Models;
 using PaGG.Core.Request;
 using PaGG.Core.Response;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PaGG.Controllers
 {
     [ApiController]
-    [Route("api/accounts")]
+    [Route("api/account")]
     public class AccountsController : ControllerBase
     {
         private readonly IAccountOperations _accountOperations;
@@ -28,8 +27,7 @@ namespace PaGG.Controllers
         public AccountResponse GetAccountById(string id)
         {
             var account = _accountOperations.GetAccount(id);
-
-            return new AccountResponse();
+            return new AccountResponse(account);
         }
 
         /// <summary>
@@ -40,10 +38,9 @@ namespace PaGG.Controllers
         [HttpPost]
         public async Task<AccountResponse> CreateAccount(AccountRequest request)
         {
-            // validate the request object
-
-            var account = await _accountOperations.CreateAccountAsync();
-            return new AccountResponse();
+            var wallet = request.Wallet.Select(bo => new BillingOption(bo));
+            var account = await _accountOperations.CreateAccountAsync(request.AccountOwner, wallet);
+            return new AccountResponse(account);
         }
     }
 }

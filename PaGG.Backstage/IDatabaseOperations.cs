@@ -8,5 +8,6 @@ namespace PaGG.Backstage
         Account GetAccount(string accountId);
         Transaction GetTransaction(string transactionId);
         Task SaveTransactionAsync(Transaction transaction);
+        Task SaveAccountAsync(Account account);
     }
 }

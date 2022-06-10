@@ -9,6 +9,6 @@ namespace PaGG.Core.Request
         [DataMember]
         public string AccountOwner { get; set; }
         [DataMember]
-        public List<BillingOptionRequest> Wallet;
+        public List<BillingOptionRequest> Wallet { get; set; }
     }
 }

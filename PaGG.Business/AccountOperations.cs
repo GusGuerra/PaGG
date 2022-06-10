@@ -1,6 +1,7 @@
 ﻿using PaGG.Backstage;
 using PaGG.Core.Exceptions;
 using PaGG.Core.Models;
+using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace PaGG.Business
     public class AccountOperations : IAccountOperations
     {
         private readonly IDatabaseOperations _databaseOperations;
+
         public AccountOperations(IDatabaseOperations databaseOperations)
         {
             _databaseOperations = databaseOperations;
@@ -27,9 +29,15 @@ namespace PaGG.Business
             return acc;
         }
 
-        public async Task<Account> CreateAccountAsync()
+        public async Task<Account> CreateAccountAsync(string accountOwner, IEnumerable<BillingOption> wallet)
         {
-            return new Account();
+            var account = new Account()
+            {
+                AccountOwner = accountOwner,
+                Wallet = new List<BillingOption>(wallet)
+            };
+            await _databaseOperations.SaveAccountAsync(account);
+            return account;
         }
     }
 }
