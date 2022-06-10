@@ -1,5 +1,4 @@
-﻿
-namespace PaGG.Core.Utilities
+﻿namespace PaGG.Core.Utilities
 {
     public static class GeneralUtils
     {
