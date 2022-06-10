@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace PaGG.Core.Request
 {
+    [DataContract]
     public class AccountRequest
     {
+        [DataMember]
+        public string AccountOwner { get; set; }
+        [DataMember]
+        public List<BillingOptionRequest> Wallet;
     }
 }
