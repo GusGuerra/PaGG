@@ -11,10 +11,10 @@ namespace PaGG.Business
         private readonly IDatabaseOperations _databaseOperations;
         private readonly ILockOperations _lockOperations;
 
-        public TransactionOperations(IDatabaseOperations databaseOperations)
+        public TransactionOperations(IDatabaseOperations databaseOperations, ILockOperations lockOperations)
         {
             _databaseOperations = databaseOperations;
-            _lockOperations = new LockOperations(); // TODO: Figure if I can do this another way
+            _lockOperations = lockOperations;
         }
 
         public Transaction GetTransaction(string transactionId)

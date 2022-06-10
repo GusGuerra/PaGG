@@ -24,6 +24,8 @@ namespace PaGG
         {
             services.AddSingleton<IDatabaseOperations, DatabaseOperations>();
             services.AddSingleton<ITransactionOperations, TransactionOperations>();
+            services.AddSingleton<IAccountOperations, AccountOperations>();
+            services.AddSingleton<ILockOperations, LockOperations>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
