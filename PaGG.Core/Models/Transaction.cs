@@ -8,7 +8,7 @@ namespace PaGG.Core.Models
         public Transaction(string senderId, string receiverId, decimal amount)
         {
             CreatedAt = DateTime.UtcNow;
-            SetStatusWithTimestamp(TransactionStatus.Processing);
+            SetStatusWithTimestamp(TransactionStatus.Processing.ToString());
             SenderId = senderId; ReceiverId = receiverId; Amount = amount;
             Id = RandomUtils.CreateNewUniqueId();
         }

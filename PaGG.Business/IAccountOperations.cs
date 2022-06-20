@@ -6,7 +6,7 @@ namespace PaGG.Business
 {
     public interface IAccountOperations
     {
-        public Account GetAccount(string accountId);
+        public Task<Account> GetAccountAsync(string accountId);
         public Task<Account> CreateAccountAsync(string accountOwner, IEnumerable<BillingOption> wallet);
     }
 }

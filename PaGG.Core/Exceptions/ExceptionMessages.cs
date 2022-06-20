@@ -7,5 +7,6 @@
         public const string InvalidTransactionId = "The specified transaction id is invalid";
         public const string InvalidAccountId = "The specified account id is invalid";
         public const string ObjectLocked = "You cannot perform this action right now";
+        public const string InvalidTransactionStatus = "The specified status is invalid for this transaction";
     }
 }

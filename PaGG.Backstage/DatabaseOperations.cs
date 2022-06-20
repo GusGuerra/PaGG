@@ -17,12 +17,12 @@ namespace PaGG.Backstage
             AccountDatabase = new List<Account>();
         }
 
-        public Transaction GetTransaction(string transactionId)
+        public async Task<Transaction> GetTransactionAsync(string transactionId)
         {
             return TransactionDatabase.FirstOrDefault(t => t.Id == transactionId);
         }
 
-        public Account GetAccount(string accountId)
+        public async Task<Account> GetAccountAsync(string accountId)
         {
             return AccountDatabase.FirstOrDefault(a => a.Id == accountId);
         }

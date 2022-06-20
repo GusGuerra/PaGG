@@ -24,9 +24,9 @@ namespace PaGG.Controllers
         /// </summary>
         /// <returns>Information about the requested account</returns>
         [HttpGet("{id}")]
-        public AccountResponse GetAccountById(string id)
+        public async Task<AccountResponse> GetAccountById(string id)
         {
-            var account = _accountOperations.GetAccount(id);
+            var account = await _accountOperations.GetAccountAsync(id);
             return new AccountResponse(account);
         }
 

@@ -17,12 +17,12 @@ namespace PaGG.Business
             _lockOperations = lockOperations;
         }
 
-        public Transaction GetTransaction(string transactionId)
+        public async Task<Transaction> GetTransactionAsync(string transactionId)
         {
             if (string.IsNullOrWhiteSpace(transactionId))
                 throw new PaGGCustomException(HttpStatusCode.BadRequest, ExceptionMessages.InvalidTransactionId);
 
-            var tx = _databaseOperations.GetTransaction(transactionId);
+            var tx = await _databaseOperations.GetTransactionAsync(transactionId);
             
             if (tx == null)
                 throw new PaGGCustomException(HttpStatusCode.NotFound, ExceptionMessages.TransactionNotFound);
@@ -51,6 +51,19 @@ namespace PaGG.Business
             // decide between internal or external operation
             // perform operation
             // modify balances
+        }
+
+        public async Task ValidateTransactionAsync(Account sender, Account receiver, Transaction transaction)
+        {
+            if (sender.Balance < transaction.AmountAsLong) // external call to bank is not necessary
+            {
+                // do something
+                return;
+            }
+
+            // call bank for validation of credit card
+            // possibly update transaction status
+
         }
     }
 }

@@ -5,7 +5,8 @@ namespace PaGG.Business
 {
     public interface ITransactionOperations
     {
-        Transaction GetTransaction(string transactionId);
+        Task<Transaction> GetTransactionAsync(string transactionId);
         Task<Transaction> CreateTransactionAsync(string receiverId, string senderId, decimal amount);
+        Task ValidateTransactionAsync(Account sender, Account receiver, Transaction transaction);
     }
 }

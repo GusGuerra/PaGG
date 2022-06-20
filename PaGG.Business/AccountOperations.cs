@@ -16,12 +16,12 @@ namespace PaGG.Business
             _databaseOperations = databaseOperations;
         }
 
-        public Account GetAccount(string accountId)
+        public async Task<Account> GetAccountAsync(string accountId)
         {
             if (string.IsNullOrWhiteSpace(accountId))
                 throw new PaGGCustomException(HttpStatusCode.BadRequest, ExceptionMessages.InvalidAccountId);
 
-            var acc = _databaseOperations.GetAccount(accountId);
+            var acc = await _databaseOperations.GetAccountAsync(accountId);
             
             if (acc == null)
                 throw new PaGGCustomException(HttpStatusCode.NotFound, ExceptionMessages.AccountNotFound);
