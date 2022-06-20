@@ -38,13 +38,14 @@ namespace PaGG.Business
             // check if both accounts are valid
             var transaction = new Transaction(receiver.Id, sender.Id, amount);
 
-            await Task.WhenAll(
-                _lockOperations.PerformAccountLock(sender.Id),
-                _lockOperations.PerformAccountLock(receiver.Id),
-                _lockOperations.PerformTransactionLock(transaction.Id));
+            await PerformLocksForTransaction(receiver, sender, transaction);
 
-            await _databaseOperations.SaveTransactionAsync(transaction);
-            
+            await Task.WhenAll(
+                _databaseOperations.SaveTransactionAsync(transaction),
+                _databaseOperations.SaveAccountAsync(sender),
+                _databaseOperations.SaveAccountAsync(receiver)
+            );
+
             var transactionTask = PerformTransactionAsync(receiver, sender, transaction);
 
             if (transaction.Type == TransactionType.Internal)
@@ -54,6 +55,15 @@ namespace PaGG.Business
             }
 
             return transaction;
+        }
+
+        private async Task PerformLocksForTransaction(Account receiver, Account sender, Transaction transaction)
+        {
+            var lockSender = Task.Run(async () => { sender.LockId = await _lockOperations.PerformAccountLock(sender.Id); });
+            var lockReceiver = Task.Run(async () => { receiver.LockId = await _lockOperations.PerformAccountLock(receiver.Id); });
+            var lockTransaction = Task.Run(async () => { transaction.LockId = await _lockOperations.PerformTransactionLock(transaction.Id); });
+
+            await Task.WhenAll(lockSender, lockReceiver, lockTransaction);
         }
 
         private Task PerformTransactionAsync(Account receiver, Account sender, Transaction transaction)
@@ -90,7 +100,30 @@ namespace PaGG.Business
         {
             transaction.SetStatusWithTimestamp(status);
 
+            var receiver = await _accountOperations.GetAccountAsync(transaction.ReceiverId);
+            var sender = await _accountOperations.GetAccountAsync(transaction.SenderId);
+
+            await ReleaseLockForTransaction(transaction, receiver, sender);
+
+            await Task.WhenAll(
+                _databaseOperations.SaveTransactionAsync(transaction),
+                _accountOperations.SaveAccountAsync(sender),
+                _accountOperations.SaveAccountAsync(receiver)
+            );
+
             return transaction;
+        }
+
+        private async Task ReleaseLockForTransaction(Transaction transaction, Account receiver, Account sender)
+        {
+            await Task.WhenAll(
+                _lockOperations.ReleaseAccountLock(receiver.Id, receiver.LockId),
+                _lockOperations.ReleaseAccountLock(sender.Id, sender.LockId),
+                _lockOperations.ReleaseTransactionLock(transaction.Id, transaction.LockId));
+
+            receiver.LockId = null;
+            sender.LockId = null;
+            transaction.LockId = null;
         }
     }
 }

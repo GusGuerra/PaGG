@@ -12,6 +12,7 @@ namespace PaGG.Core.Models
         }
 
         public string Id { get; set; }
+        public string LockId { get; set; }
         public long Balance { get; set; }
         public string AccountOwner { get; set; }
         public List<BillingOption> Wallet { get; set; }
