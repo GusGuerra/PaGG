@@ -15,8 +15,7 @@ namespace PaGG.Core.Models
         public long Balance { get; set; }
         public string AccountOwner { get; set; }
         public List<BillingOption> Wallet { get; set; }
-        public AccountType Type { get; set; }
-
+        
         public void AddBalance(long delta) => Balance += delta;
         public void SubtractBalance(long delta) => Balance -= delta;
     }

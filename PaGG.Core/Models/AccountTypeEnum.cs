@@ -1,6 +1,6 @@
 ﻿namespace PaGG.Core.Models
 {
-    public enum AccountType
+    public enum TransactionType
     {
         Internal,
         External

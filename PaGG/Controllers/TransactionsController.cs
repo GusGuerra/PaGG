@@ -67,11 +67,20 @@ namespace PaGG.Controllers
         [HttpPost("{id}/callback/{status}")]
         public async Task TransactionCallback(string id, string status)
         {
-            var getTransaction = _transactionOperations.GetTransactionAsync(id);
+            Transaction transaction;
+            try
+            {
+                transaction = await _transactionOperations.GetTransactionAsync(id);
+            }
+            catch (PaGGCustomException)
+            {
+                throw new PaGGCustomException(HttpStatusCode.BadRequest, ExceptionMessages.InvalidTransactionStatus);
+            }
 
             if (!Enum.IsDefined(typeof(TransactionStatus), status))
                 throw new PaGGCustomException(HttpStatusCode.BadRequest, ExceptionMessages.InvalidTransactionStatus);
-            
+
+            await _transactionOperations.FinishTransactionAsync(transaction, status);
         }
     }
 }

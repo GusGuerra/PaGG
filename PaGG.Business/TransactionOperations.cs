@@ -44,25 +44,34 @@ namespace PaGG.Business
                 _lockOperations.PerformTransactionLock(transaction.Id));
 
             await _databaseOperations.SaveTransactionAsync(transaction);
-            _ = PerformTransactionAsync(receiver, sender, transaction);
+            
+            var transactionTask = PerformTransactionAsync(receiver, sender, transaction);
+
+            if (transaction.Type == TransactionType.Internal)
+            {
+                await transactionTask;
+                await FinishTransactionAsync(transaction, TransactionStatus.Authorized.ToString());
+            }
 
             return transaction;
         }
 
-        private async Task PerformTransactionAsync(Account receiver, Account sender, Transaction transaction)
+        private Task PerformTransactionAsync(Account receiver, Account sender, Transaction transaction)
         {
+            transaction.SetStatusWithTimestamp(TransactionStatus.Authorizing.ToString());
+
             if (sender.Balance >= transaction.AmountAsLong) // external call to bank is not necessary
             {
                 receiver.AddBalance(transaction.AmountAsLong);
                 sender.SubtractBalance(transaction.AmountAsLong);
 
-                transaction.SetStatusWithTimestamp(TransactionStatus.Authorized.ToString());
+                transaction.Type = TransactionType.Internal;
             }
             else if (sender.Wallet.Count != 0)
             {
                 // decrease balance from sender through external call
                 receiver.AddBalance(transaction.AmountAsLong);
-                transaction.SetStatusWithTimestamp(TransactionStatus.Authorizing.ToString());
+                transaction.Type = TransactionType.External;
             }
             else
             {
@@ -70,12 +79,18 @@ namespace PaGG.Business
                 transaction.SetStatusWithTimestamp(TransactionStatus.Canceled.ToString());
             }
 
-            _ = Task.Run(() =>
-            {
-                _databaseOperations.SaveTransactionAsync(transaction);
-                _accountOperations.SaveAccountAsync(sender);
-                _accountOperations.SaveAccountAsync(receiver);
-            });
+            return Task.WhenAll(
+                _databaseOperations.SaveTransactionAsync(transaction),
+                _accountOperations.SaveAccountAsync(sender),
+                _accountOperations.SaveAccountAsync(receiver)
+            );
+        }
+
+        public async Task<Transaction> FinishTransactionAsync(Transaction transaction, string status)
+        {
+            transaction.SetStatusWithTimestamp(status);
+
+            return transaction;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace PaGG.Core.Models
         public DateTime CreatedAt { get; private set; }
         public DateTime StatusTimestamp { get; set; }
         public string Status { get; set; }
+        public TransactionType Type { get; set; }
 
         public void SetStatusWithTimestamp(string status)
         {

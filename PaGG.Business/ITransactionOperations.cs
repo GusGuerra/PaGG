@@ -7,5 +7,6 @@ namespace PaGG.Business
     {
         Task<Transaction> GetTransactionAsync(string transactionId);
         Task<Transaction> CreateTransactionAsync(Account receiver, Account sender, decimal amount);
+        Task<Transaction> FinishTransactionAsync(Transaction transaction, string status);
     }
 }
