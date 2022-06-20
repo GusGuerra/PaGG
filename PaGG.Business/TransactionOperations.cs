@@ -10,11 +10,14 @@ namespace PaGG.Business
     {
         private readonly IDatabaseOperations _databaseOperations;
         private readonly ILockOperations _lockOperations;
+        private readonly IAccountOperations _accountOperations;
 
-        public TransactionOperations(IDatabaseOperations databaseOperations, ILockOperations lockOperations)
+        public TransactionOperations(IDatabaseOperations databaseOperations, ILockOperations lockOperations,
+            IAccountOperations accountOperations)
         {
             _databaseOperations = databaseOperations;
             _lockOperations = lockOperations;
+            _accountOperations = accountOperations;
         }
 
         public async Task<Transaction> GetTransactionAsync(string transactionId)
@@ -30,40 +33,49 @@ namespace PaGG.Business
             return tx;
         }
 
-        public async Task<Transaction> CreateTransactionAsync(string receiverId, string senderId, decimal amount)
+        public async Task<Transaction> CreateTransactionAsync(Account receiver, Account sender, decimal amount)
         {
             // check if both accounts are valid
-            var transaction = new Transaction(receiverId, senderId, amount);
+            var transaction = new Transaction(receiver.Id, sender.Id, amount);
 
             await Task.WhenAll(
-                _lockOperations.PerformAccountLock(senderId),
-                _lockOperations.PerformAccountLock(receiverId),
+                _lockOperations.PerformAccountLock(sender.Id),
+                _lockOperations.PerformAccountLock(receiver.Id),
                 _lockOperations.PerformTransactionLock(transaction.Id));
 
             await _databaseOperations.SaveTransactionAsync(transaction);
-            _ = PerformTransactionAsync(transaction);
+            _ = PerformTransactionAsync(receiver, sender, transaction);
 
             return transaction;
         }
 
-        private async Task PerformTransactionAsync(Transaction transaction)
+        private async Task PerformTransactionAsync(Account receiver, Account sender, Transaction transaction)
         {
-            // decide between internal or external operation
-            // perform operation
-            // modify balances
-        }
-
-        public async Task ValidateTransactionAsync(Account sender, Account receiver, Transaction transaction)
-        {
-            if (sender.Balance < transaction.AmountAsLong) // external call to bank is not necessary
+            if (sender.Balance >= transaction.AmountAsLong) // external call to bank is not necessary
             {
-                // do something
-                return;
+                receiver.AddBalance(transaction.AmountAsLong);
+                sender.SubtractBalance(transaction.AmountAsLong);
+
+                transaction.SetStatusWithTimestamp(TransactionStatus.Authorized.ToString());
+            }
+            else if (sender.Wallet.Count != 0)
+            {
+                // decrease balance from sender through external call
+                receiver.AddBalance(transaction.AmountAsLong);
+                transaction.SetStatusWithTimestamp(TransactionStatus.Authorizing.ToString());
+            }
+            else
+            {
+                // cannot grab money from sender
+                transaction.SetStatusWithTimestamp(TransactionStatus.Canceled.ToString());
             }
 
-            // call bank for validation of credit card
-            // possibly update transaction status
-
+            _ = Task.Run(() =>
+            {
+                _databaseOperations.SaveTransactionAsync(transaction);
+                _accountOperations.SaveAccountAsync(sender);
+                _accountOperations.SaveAccountAsync(receiver);
+            });
         }
     }
 }

@@ -46,13 +46,12 @@ namespace PaGG.Controllers
         public async Task<TransactionResponse> StartTransaction(TransactionRequest request)
         {
             // validate the request object
-
             var getSender = _accountOperations.GetAccountAsync(request.SenderId);
             var getReceiver = _accountOperations.GetAccountAsync(request.ReceiverId);
 
-            var transaction = await _transactionOperations.CreateTransactionAsync(request.ReceiverId, request.SenderId, request.Amount);
-
-            _ = Task.Run(async () => _transactionOperations.ValidateTransactionAsync(await getSender, await getReceiver, transaction));
+            await Task.WhenAll(getSender, getReceiver);
+            
+            var transaction = await _transactionOperations.CreateTransactionAsync(getSender.Result, getReceiver.Result, request.Amount);
 
             // move this to a converter class
             return new TransactionResponse(transaction);

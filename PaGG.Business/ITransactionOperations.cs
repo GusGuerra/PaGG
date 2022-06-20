@@ -6,7 +6,6 @@ namespace PaGG.Business
     public interface ITransactionOperations
     {
         Task<Transaction> GetTransactionAsync(string transactionId);
-        Task<Transaction> CreateTransactionAsync(string receiverId, string senderId, decimal amount);
-        Task ValidateTransactionAsync(Account sender, Account receiver, Transaction transaction);
+        Task<Transaction> CreateTransactionAsync(Account receiver, Account sender, decimal amount);
     }
 }

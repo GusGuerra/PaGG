@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 namespace PaGG.Backstage
 {
+    // TODO: Refactor class into DatabaseOperations <T, TDB>
     public class DatabaseOperations : IDatabaseOperations
     {
         // Temporary "mock" databases
@@ -29,7 +30,11 @@ namespace PaGG.Backstage
 
         public async Task SaveTransactionAsync(Transaction transaction)
         {
-            TransactionDatabase.Add(transaction);
+            var existingTransaction = TransactionDatabase.FirstOrDefault(dbTransaction => dbTransaction.Id == transaction.Id);
+            if (existingTransaction == null)
+                TransactionDatabase.Add(transaction);
+            else
+                existingTransaction = transaction;
         }
 
         public async Task SaveAccountAsync(Account account)
