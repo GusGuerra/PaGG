@@ -34,7 +34,11 @@ namespace PaGG.Backstage
 
         public async Task SaveAccountAsync(Account account)
         {
-            AccountDatabase.Add(account);
+            var existingAccount = AccountDatabase.FirstOrDefault(dbAccount => dbAccount.Id == account.Id);
+            if (existingAccount == null)
+                AccountDatabase.Add(account);
+            else
+                existingAccount = account;
         }
     }
 }

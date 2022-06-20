@@ -29,6 +29,11 @@ namespace PaGG.Business
             return acc;
         }
 
+        public async Task SaveAccountAsync(Account account)
+        {
+            await _databaseOperations.SaveAccountAsync(account);
+        }
+
         public async Task<Account> CreateAccountAsync(string accountOwner, IEnumerable<BillingOption> wallet)
         {
             var account = new Account()
@@ -36,7 +41,7 @@ namespace PaGG.Business
                 AccountOwner = accountOwner,
                 Wallet = new List<BillingOption>(wallet)
             };
-            await _databaseOperations.SaveAccountAsync(account);
+            await SaveAccountAsync(account);
             return account;
         }
     }
