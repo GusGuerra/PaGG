@@ -46,13 +46,10 @@ namespace PaGG.Business
                 _databaseOperations.SaveAccountAsync(receiver)
             );
 
-            var transactionTask = PerformTransactionAsync(receiver, sender, transaction);
+            await PerformTransactionAsync(receiver, sender, transaction);
 
             if (transaction.Type == TransactionType.Internal)
-            {
-                await transactionTask;
                 await FinishTransactionAsync(transaction, TransactionStatus.Authorized.ToString());
-            }
 
             return transaction;
         }

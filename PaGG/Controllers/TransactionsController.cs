@@ -51,7 +51,7 @@ namespace PaGG.Controllers
 
             await Task.WhenAll(getSender, getReceiver);
             
-            var transaction = await _transactionOperations.CreateTransactionAsync(getSender.Result, getReceiver.Result, request.Amount);
+            var transaction = await _transactionOperations.CreateTransactionAsync(getReceiver.Result, getSender.Result, request.Amount);
 
             // move this to a converter class
             return new TransactionResponse(transaction);
