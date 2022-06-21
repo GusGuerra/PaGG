@@ -46,13 +46,7 @@ namespace PaGG.Business
                 _databaseOperations.SaveAccountAsync(receiver)
             );
 
-            var transactionTask = PerformTransactionAsync(receiver, sender, transaction);
-
-            if (transaction.Type == TransactionType.Internal)
-            {
-                await transactionTask;
-                await FinishTransactionAsync(transaction, TransactionStatus.Authorized.ToString());
-            }
+            await PrepareTransactionAsync(sender, transaction);
 
             return transaction;
         }
@@ -66,22 +60,19 @@ namespace PaGG.Business
             await Task.WhenAll(lockSender, lockReceiver, lockTransaction);
         }
 
-        private Task PerformTransactionAsync(Account receiver, Account sender, Transaction transaction)
+        private Task PrepareTransactionAsync(Account sender, Transaction transaction)
         {
             transaction.SetStatusWithTimestamp(TransactionStatus.Authorizing.ToString());
 
             if (sender.Balance >= transaction.AmountAsLong) // external call to bank is not necessary
             {
-                receiver.AddBalance(transaction.AmountAsLong);
-                sender.SubtractBalance(transaction.AmountAsLong);
-
                 transaction.Type = TransactionType.Internal;
+                // raise pipeline event for internal transaction
             }
             else if (sender.Wallet.Count != 0)
             {
-                // decrease balance from sender through external call
-                receiver.AddBalance(transaction.AmountAsLong);
                 transaction.Type = TransactionType.External;
+                // raise pipeline event for external transaction
             }
             else
             {
@@ -89,11 +80,7 @@ namespace PaGG.Business
                 transaction.SetStatusWithTimestamp(TransactionStatus.Canceled.ToString());
             }
 
-            return Task.WhenAll(
-                _databaseOperations.SaveTransactionAsync(transaction),
-                _accountOperations.SaveAccountAsync(sender),
-                _accountOperations.SaveAccountAsync(receiver)
-            );
+            return _databaseOperations.SaveTransactionAsync(transaction);
         }
 
         public async Task<Transaction> FinishTransactionAsync(Transaction transaction, string status)
@@ -102,6 +89,17 @@ namespace PaGG.Business
 
             var receiver = await _accountOperations.GetAccountAsync(transaction.ReceiverId);
             var sender = await _accountOperations.GetAccountAsync(transaction.SenderId);
+
+            if (transaction.Type == TransactionType.Internal)
+            {
+                receiver.AddBalance(transaction.AmountAsLong);
+                sender.SubtractBalance(transaction.AmountAsLong);
+            }
+            else if (transaction.Type == TransactionType.External)
+            {
+                // sender balance already decreased through external call
+                receiver.AddBalance(transaction.AmountAsLong);
+            }
 
             await ReleaseLockForTransaction(transaction, receiver, sender);
 
