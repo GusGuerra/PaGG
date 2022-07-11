@@ -27,7 +27,7 @@ namespace PaGG.Core.Models
         public void SetStatusWithTimestamp(string status)
         {
             Status = status;
-            StatusTimestamp = DateTime.Now;
+            StatusTimestamp = DateTime.UtcNow;
         }
     }
 }
