@@ -18,6 +18,5 @@ namespace PaGG.Core.Models
         public List<BillingOption> Wallet { get; set; }
         
         public void AddBalance(long delta) => Balance += delta;
-        public void SubtractBalance(long delta) => Balance -= delta;
     }
 }

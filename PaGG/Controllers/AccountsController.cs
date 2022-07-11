@@ -42,5 +42,21 @@ namespace PaGG.Controllers
             var account = await _accountOperations.CreateAccountAsync(request.AccountOwner, wallet);
             return new AccountResponse(account);
         }
+
+        /// <summary>
+        /// Adds balance to account
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>The newly created account</returns>
+        [HttpPost("{id}/balance")]
+        public async Task<AccountResponse> AddBalance(BalanceRequest request, string id)
+        {
+            var account = await _accountOperations.GetAccountAsync(id);
+
+            account.AddBalance(request.Amount);
+            await _accountOperations.SaveAccountAsync(account);
+            
+            return new AccountResponse(account);
+        }
     }
 }

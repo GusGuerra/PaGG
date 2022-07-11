@@ -5,7 +5,7 @@ namespace PaGG.Core.Models
 {
     public class Transaction
     {
-        public Transaction(string senderId, string receiverId, decimal amount)
+        public Transaction(string receiverId, string senderId, decimal amount)
         {
             CreatedAt = DateTime.UtcNow;
             SetStatusWithTimestamp(TransactionStatus.Processing.ToString());

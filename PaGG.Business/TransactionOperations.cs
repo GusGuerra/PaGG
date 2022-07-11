@@ -93,7 +93,7 @@ namespace PaGG.Business
             if (transaction.Type == TransactionType.Internal)
             {
                 receiver.AddBalance(transaction.AmountAsLong);
-                sender.SubtractBalance(transaction.AmountAsLong);
+                sender.AddBalance(-transaction.AmountAsLong);
             }
             else if (transaction.Type == TransactionType.External)
             {
