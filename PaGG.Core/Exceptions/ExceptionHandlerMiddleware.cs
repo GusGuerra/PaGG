@@ -20,7 +20,7 @@ namespace PaGG.Core.Exceptions
             _hostEnvironment = hostEnvironment;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
