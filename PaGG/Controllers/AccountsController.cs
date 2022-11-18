@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using PaGG.Business;
+using PaGG.Core;
 using PaGG.Core.Models;
 using PaGG.Core.Request;
 using PaGG.Core.Response;
@@ -8,8 +10,11 @@ using System.Threading.Tasks;
 
 namespace PaGG.Controllers
 {
+    [AuthFilter]
     [ApiController]
     [Route("api/account")]
+    [SomethingSomethingClass]
+
     public class AccountsController : ControllerBase
     {
         private readonly IAccountOperations _accountOperations;
@@ -57,6 +62,13 @@ namespace PaGG.Controllers
             await _accountOperations.SaveAccountAsync(account);
             
             return new AccountResponse(account);
+        }
+
+        [HttpGet("testing")]
+        [SomethingSomething]
+        public async Task<IActionResult> TestQueryString()
+        {
+            return Ok();
         }
     }
 }

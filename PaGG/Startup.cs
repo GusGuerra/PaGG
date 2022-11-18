@@ -45,7 +45,7 @@ namespace PaGG
 
             app.UseHttpsRedirection();
 
-            app.UseMiddleware<ExceptionHandlerMiddleware>();
+            //app.UseMiddleware<ExceptionHandlerMiddleware>();
 
             app.UseRouting();
 
