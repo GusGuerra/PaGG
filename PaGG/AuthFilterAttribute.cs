@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.DataProtection.KeyManagement;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Microsoft.Net.Http.Headers;
 using Microsoft.VisualBasic;
 using PaGG.Controllers;
 using PaGG.Core;
@@ -18,21 +22,55 @@ using System.Threading.Tasks;
 
 namespace PaGG
 {
-	public class AuthFilterAttribute : Attribute, IAsyncActionFilter
+	public class AuthFilterAttribute : Attribute, IAsyncActionFilter //ActionFilterAttribute
 	{
 		public async Task OnActionExecutionAsync(ActionExecutingContext curContext, ActionExecutionDelegate next)
 		{
 			var response = curContext.HttpContext.Response;
-			
-			var context = await next();
+			var request = curContext.HttpContext.Request;
+			var cookieCollection = request.Cookies;
 
-			//var controller = context.Controller as AccountsController;
-			//var list = controller.RouteData.Values.ToList().Select(kvp => $"{kvp.Key}={(string)kvp.Value}");
-			//string appended = string.Join(',', list);
+			// decode NÃO É NECESSÁRIO
+			foreach (var cookie in cookieCollection)
+            {
+                if (!cookie.Value.Contains('='))
+				{
+					curContext.Result = new StatusCodeResult(StatusCodes.Status500InternalServerError);
+					return;
+				}
+			}
 
-			response.Headers.Add("executed-filter", "True");
+			_ = await next();
 
-			//context.Result = new ObjectResult(new { x = "y", y = 26, z = 0.00001 });
+			// workaround para setar cookie SEM ENCODING
+			//response.Cookies.Append("name", "x=y");
+			var setCookieHeaderValue = new SetCookieHeaderValue("name", "x=y")
+			{
+				Domain = request.Host.Host
+			};
+
+			var headers = response.Headers;
+			headers.SetCookie = StringValues.Concat(headers.SetCookie, setCookieHeaderValue.ToString());
+			// fim workaround
+
+			// seta cookie com valor encodado AUTOMATICAMENTE
+			response.Cookies.Append("myCookie", "foo=Val1&bar=Val2", new CookieOptions() { Expires = DateTime.UtcNow.AddDays(180) });
+			response.Cookies.Append("ABC", "123");
+			// seta cookie com valor encodado AUTOMATICAMENTE
 		}
+
+		/*
+		public override void OnActionExecuted(ActionExecutedContext context)
+		{
+			context.HttpContext.Response.Headers
+				.Add("filter-executed", "True");
+
+			bool hasAttribute = context.ActionDescriptor.EndpointMetadata
+				.Any(obj => obj is SomethingSomethingAttribute);
+
+			context.HttpContext.Response.Headers
+				.Add("filter-operation", hasAttribute.ToString());
+		}
+		*/
 	}
 }

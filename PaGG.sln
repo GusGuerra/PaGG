@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.32428.217
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33103.184
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG", "PaGG\PaGG.csproj", "{7507D306-0D94-4780-8B50-D687F3531DA4}"
 EndProject
@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG.Business", "PaGG.Busin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG.Core", "PaGG.Core\PaGG.Core.csproj", "{3A66A605-5914-4C78-A6A4-131869BC94BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaGG.Backstage", "PaGG.Backstage\PaGG.Backstage.csproj", "{A4BDFF49-9617-4388-B8A5-7F2117A2829D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaGG.Backstage", "PaGG.Backstage\PaGG.Backstage.csproj", "{A4BDFF49-9617-4388-B8A5-7F2117A2829D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaGG.Tests", "PaGG.Tests\PaGG.Tests.csproj", "{94001B90-FB17-4349-8251-D2056A7837D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4BDFF49-9617-4388-B8A5-7F2117A2829D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94001B90-FB17-4349-8251-D2056A7837D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94001B90-FB17-4349-8251-D2056A7837D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94001B90-FB17-4349-8251-D2056A7837D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94001B90-FB17-4349-8251-D2056A7837D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

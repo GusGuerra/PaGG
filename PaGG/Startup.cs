@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -45,9 +46,14 @@ namespace PaGG
 
             app.UseHttpsRedirection();
 
-            //app.UseMiddleware<ExceptionHandlerMiddleware>();
+			//app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-            app.UseRouting();
+			app.Use(next => context => {
+				context.Request.EnableBuffering();
+				return next(context);
+			});
+
+			app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {

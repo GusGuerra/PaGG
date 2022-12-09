@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
+using PaGG.Backstage;
 using PaGG.Business;
 using PaGG.Core;
 using PaGG.Core.Models;
@@ -66,9 +66,11 @@ namespace PaGG.Controllers
 
         [HttpGet("testing")]
         [SomethingSomething]
-        public async Task<IActionResult> TestQueryString()
+        public async Task<ObjectResult> PerformTestApi()
         {
-            return Ok();
-        }
-    }
+            var rawRequest = await Request.ReadAsStringAsync();
+
+			return Ok(rawRequest);
+		}
+	}
 }
